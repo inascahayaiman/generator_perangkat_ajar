@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asisten Perangkat Ajar AI - Kurikulum Merdeka, Deep Learning & KBC</title>
+    <!-- Menggunakan Tailwind CSS untuk desain modern dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .tab-active {
+            border-bottom: 3px solid #2563eb;
+            color: #1d4ed8;
+            font-weight: 600;
+            background-color: #eff6ff;
+        }
+        /* Animasi loading berputar */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+    <!-- Header Aplikasi -->
+    <header class="bg-blue-700 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-graduation-cap text-2xl text-yellow-300"></i>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Asisten Perangkat Ajar AI</h1>
+                    <p class="text-xs text-blue-100">Kurikulum Merdeka • Deep Learning • Kurikulum Berbasis Cinta (KBC)</p>
+                </div>
+            </div>
+            <div class="mt-2 sm:mt-0 text-xs bg-blue-800 px-3 py-1.5 rounded-full border border-blue-500">
+                <i class="fa-solid fa-circle-check text-green-400 mr-1"></i> Mode Prototipe Siap GAS
+            </div>
+        </div>
+    </header>
+
+    <!-- Kontainer Utama -->
+    <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- KOLOM KIRI: FORMULIR INPUT DATA GURU (Lebar 5 kolom) -->
+        <section class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit">
+            <h2 class="text-lg font-bold text-slate-800 border-b pb-3 mb-4 flex items-center">
+                <i class="fa-solid fa-sliders text-blue-600 mr-2"></i> 1. Data Dasar Pembelajaran
+            </h2>
+
+            <form id="formPerangkat" class="space-y-4">
+                <!-- Identitas Sekolah & Guru -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Guru</label>
+                        <input type="text" id="namaGuru" placeholder="Contoh: Budi Santoso, S.Pd" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Satuan Pendidikan</label>
+                        <input type="text" id="namaSekolah" placeholder="Contoh: SDN 1 Nusantara" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+
+                <!-- Fase, Kelas, Semester -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Fase</label>
+                        <select id="fase" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="Fase A (Kelas 1-2)">Fase A</option>
+                            <option value="Fase B (Kelas 3-4)" selected>Fase B</option>
+                            <option value="Fase C (Kelas 5-6)">Fase C</option>
+                            <option value="Fase D (Kelas 7-9)">Fase D</option>
+                            <option value="Fase E (Kelas 10)">Fase E</option>
+                            <option value="Fase F (Kelas 11-12)">Fase F</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas</label>
+                        <input type="text" id="kelas" placeholder="Contoh: IV (Empat)" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Semester</label>
+                        <select id="semester" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="1 (Ganjil)">1 (Ganjil)</option>
+                            <option value="2 (Genap)">2 (Genap)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Mata Pelajaran & Alokasi Waktu -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Mata Pelajaran</label>
+                        <input type="text" id="mapel" placeholder="Contoh: IPAS / Matematika" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Alokasi Waktu & JP</label>
+                        <input type="text" id="alokasiWaktu" placeholder="Contoh: 2 x 35 Menit (1 Pertemuan)" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+
+                <!-- Teks Capaian Pembelajaran (CP) -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">
+                        Capaian Pembelajaran (CP) <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="teksCP" rows="4" placeholder="Tempelkan (Paste) teks Capaian Pembelajaran dari BSKAP di sini..." class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required></textarea>
+                </div>
+
+                <!-- Fokus Topik / Materi Utama -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Materi Pokok / Topik Spesifik</label>
+                    <input type="text" id="materiPokok" placeholder="Contoh: Perubahan Wujud Benda di Sekitar Kita" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                </div>
+
+                <!-- Konfigurasi Deep Learning & Kurikulum Berbasis Cinta -->
+                <div class="bg-blue-50 p-3.5 rounded-lg border border-blue-200 space-y-3">
+                    <p class="text-xs font-bold text-blue-800 uppercase tracking-wider">
+                        <i class="fa-solid fa-heart text-rose-500 mr-1"></i> Pendekatan Pedagogis
+                    </p>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Model Pembelajaran</label>
+                        <select id="modelBelajar" class="w-full px-3 py-1.5 text-sm bg-white border rounded-md outline-none">
+                            <option value="Problem Based Learning (PBL)">Problem Based Learning (PBL)</option>
+                            <option value="Project Based Learning (PjBL)">Project Based Learning (PjBL)</option>
+                            <option value="Discovery / Inquiry Learning">Discovery / Inquiry Learning</option>
+                            <option value="Pembelajaran Berdiferensiasi">Pembelajaran Berdiferensiasi</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nilai Kurikulum Berbasis Cinta (KBC)</label>
+                        <select id="nilaiKBC" class="w-full px-3 py-1.5 text-sm bg-white border rounded-md outline-none">
+                            <option value="Cinta Sesama & Anti-Perundungan (Empati & Kolaborasi)">Cinta Sesama & Anti-Perundungan (Empati)</option>
+                            <option value="Cinta Lingkungan & Alam Semesta (Ekopedagogi)">Cinta Lingkungan & Alam Semesta</option>
+                            <option value="Cinta Tuhan & Syukur atas Ilmu Pengetahuan">Cinta Tuhan & Syukur atas Ilmu</option>
+                            <option value="Cinta Tanah Air & Keberagaman Budaya">Cinta Tanah Air & Keberagaman</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- KOLOM KANAN: TABS GENERATOR BERTAHAP & HASIL (Lebar 7 kolom) -->
+        <section class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col">
+            
+            <!-- Navigasi 4 Tab Bertahap (Mencegah Timeout GAS) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 border-b text-xs sm:text-sm text-center">
+                <button onclick="gantiTab(1)" id="tabBtn1" class="py-3 px-2 tab-active transition">
+                    <span class="block font-bold">Tahap 1</span>
+                    <span class="text-xs text-slate-500">TP, ATP & KKTP</span>
+                </button>
+                <button onclick="gantiTab(2)" id="tabBtn2" class="py-3 px-2 text-slate-600 hover:bg-slate-50 transition">
+                    <span class="block font-bold">Tahap 2</span>
+                    <span class="text-xs text-slate-500">Minggu Efektif, Prota/Promes</span>
+                </button>
+                <button onclick="gantiTab(3)" id="tabBtn3" class="py-3 px-2 text-slate-600 hover:bg-slate-50 transition">
+                    <span class="block font-bold">Tahap 3</span>
+                    <span class="text-xs text-slate-500">Modul Ajar, LKPD, PPT</span>
+                </button>
+                <button onclick="gantiTab(4)" id="tabBtn4" class="py-3 px-2 text-slate-600 hover:bg-slate-50 transition">
+                    <span class="block font-bold">Tahap 4</span>
+                    <span class="text-xs text-slate-500">Kisi-kisi, Soal & Rubrik</span>
+                </button>
+            </div>
+
+            <!-- Panel Kontrol & Hasil per Tab -->
+            <div class="p-6 flex-1 flex flex-col">
+                
+                <!-- Baris Tombol Aksi -->
+                <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b mb-4">
+                    <div>
+                        <h3 id="judulTahap" class="font-bold text-slate-800">Tahap 1: Analisis CP menjadi TP, ATP & KKTP</h3>
+                        <p id="deskTahap" class="text-xs text-slate-500">AI akan menurunkan CP menjadi Tujuan Pembelajaran terukur beserta kriteria ketuntasannya.</p>
+                    </div>
+                    
+                    <button onclick="prosesGenerate()" id="btnGenerate" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow transition flex items-center">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generate Tahap 1
+                    </button>
+                </div>
+
+                <!-- Info Tambahan Khusus Tahap 2 (Kalender Pendidikan) -->
+                <div id="inputKalender" class="hidden mb-4 bg-amber-50 p-3 rounded-lg border border-amber-200 grid grid-cols-3 gap-3 text-xs">
+                    <div>
+                        <label class="font-semibold text-amber-900 block mb-1">Jumlah Minggu Total</label>
+                        <input type="number" id="mingguTotal" value="20" class="w-full p-1.5 border rounded bg-white">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-amber-900 block mb-1">Minggu Tidak Efektif</label>
+                        <input type="number" id="mingguTidakEfektif" value="4" class="w-full p-1.5 border rounded bg-white">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-amber-900 block mb-1">JP per Minggu</label>
+                        <input type="number" id="jpPerMinggu" value="4" class="w-full p-1.5 border rounded bg-white">
+                    </div>
+                </div>
+
+                <!-- Area Tampilan Hasil AI -->
+                <div id="areaHasil" class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-4 min-h-[350px] max-h-[500px] overflow-y-auto text-sm leading-relaxed">
+                    <div class="h-full flex flex-col items-center justify-center text-slate-400 text-center py-12">
+                        <i class="fa-regular fa-file-lines text-4xl mb-3"></i>
+                        <p>Isi data pembelajaran di kolom sebelah kiri, lalu klik tombol <strong>Generate</strong> di atas.</p>
+                    </div>
+                </div>
+
+                <!-- Tombol Download / Salin di Bagian Bawah -->
+                <div class="mt-4 pt-3 border-t flex justify-end gap-2">
+                    <button onclick="salinHasil()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border">
+                        <i class="fa-regular fa-copy mr-1"></i> Salin Teks
+                    </button>
+                    <button onclick="exportWordSederhana()" class="px-3 py-1.5 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-md shadow-sm">
+                        <i class="fa-solid fa-file-word mr-1"></i> Unduh Word (.doc)
+                    </button>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- SCRIPT LOGIKA HALAMAN DEPAN -->
+    <script>
+        let tahapAktif = 1;
+        // Menyimpan hasil tiap tahap agar saling terhubung
+        let memoriPerangkat = {
+            tahap1: "",
+            tahap2: "",
+            tahap3: "",
+            tahap4: ""
+        };
+
+        // Ganti URL ini dengan URL Web App Google Apps Script Anda pada langkah berikutnya
+        const URL_GAS_WEBAPP = ""; 
+
+        const infoTahap = {
+            1: {
+                judul: "Tahap 1: Analisis CP menjadi TP, ATP & KKTP",
+                desk: "AI akan menurunkan CP menjadi Tujuan Pembelajaran terukur beserta kriteria ketuntasannya.",
+                tombol: "Generate Tahap 1"
+            },
+            2: {
+                judul: "Tahap 2: Analisis Hari/Minggu Efektif, Prota & Promes",
+                desk: "Menghitung rincian minggu efektif dan memetakan distribusi JP ke dalam Prota dan Promes.",
+                tombol: "Generate Tahap 2"
+            },
+            3: {
+                judul: "Tahap 3: Modul Ajar (Deep Learning & KBC), LKPD, Buku Siswa & Kerangka PPT",
+                desk: "Menyusun skenario belajar Mindful, Meaningful, Joyful yang terintegrasi nilai cinta.",
+                tombol: "Generate Tahap 3"
+            },
+            4: {
+                judul: "Tahap 4: Asesmen, Rubrik, Kisi-kisi, Kartu Soal, Soal & Kunci Jawaban",
+                desk: "Menghasilkan instrumen evaluasi lengkap dari level dasar hingga HOTS.",
+                tombol: "Generate Tahap 4"
+            }
+        };
+
+        function gantiTab(nomor) {
+            tahapAktif = nomor;
+            
+            // Update tampilan tombol tab
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`tabBtn${i}`);
+                if (i === nomor) {
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('text-slate-600');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('text-slate-600');
+                }
+            }
+
+            // Update judul dan deskripsi
+            document.getElementById('judulTahap').innerText = infoTahap[nomor].judul;
+            document.getElementById('deskTahap').innerText = infoTahap[nomor].desk;
+            document.getElementById('btnGenerate').innerHTML = `<i class="fa-solid fa-wand-magic-sparkles mr-2"></i> ${infoTahap[nomor].tombol}`;
+
+            // Tampilkan input kalender khusus di Tahap 2
+            const boxKalender = document.getElementById('inputKalender');
+            if (nomor === 2) {
+                boxKalender.classList.remove('hidden');
+            } else {
+                boxKalender.classList.add('hidden');
+            }
+
+            // Tampilkan hasil yang tersimpan jika sudah pernah di-generate
+            const areaHasil = document.getElementById('areaHasil');
+            if (memoriPerangkat[`tahap${nomor}`]) {
+                areaHasil.innerHTML = memoriPerangkat[`tahap${nomor}`];
+            } else {
+                areaHasil.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-slate-400 text-center py-12">
+                        <i class="fa-regular fa-file-lines text-4xl mb-3"></i>
+                        <p>Klik tombol <strong>${infoTahap[nomor].tombol}</strong> untuk membuat dokumen bagian ini.</p>
+                    </div>`;
+            }
+        }
+
+        async function prosesGenerate() {
+            const cp = document.getElementById('teksCP').value.trim();
+            if (!cp) {
+                alert("Mohon isi teks Capaian Pembelajaran (CP) terlebih dahulu di kolom sebelah kiri.");
+                document.getElementById('teksCP').focus();
+                return;
+            }
+
+            const btn = document.getElementById('btnGenerate');
+            const areaHasil = document.getElementById('areaHasil');
+            
+            // Ubah status tombol menjadi loading
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loader mr-2"></span> Sedang Menyusun...`;
+            areaHasil.innerHTML = `<div class="text-center py-16 text-blue-600"><span class="loader mb-3"></span><p class="font-medium">AI sedang merancang perangkat pembelajaran sesuai Kurikulum Merdeka, Deep Learning & KBC...</p></div>`;
+
+            // Kumpulkan semua data formulir
+            const payload = {
+                tahap: tahapAktif,
+                namaGuru: document.getElementById('namaGuru').value,
+                namaSekolah: document.getElementById('namaSekolah').value,
+                fase: document.getElementById('fase').value,
+                kelas: document.getElementById('kelas').value,
+                semester: document.getElementById('semester').value,
+                mapel: document.getElementById('mapel').value,
+                alokasiWaktu: document.getElementById('alokasiWaktu').value,
+                teksCP: cp,
+                materiPokok: document.getElementById('materiPokok').value,
+                modelBelajar: document.getElementById('modelBelajar').value,
+                nilaiKBC: document.getElementById('nilaiKBC').value,
+                mingguTotal: document.getElementById('mingguTotal').value,
+                mingguTidakEfektif: document.getElementById('mingguTidakEfektif').value,
+                jpPerMinggu: document.getElementById('jpPerMinggu').value,
+                konteksSebelumnya: memoriPerangkat.tahap1 // Mengirim hasil tahap 1 sebagai acuan tahap berikutnya
+            };
+
+            // Jika URL GAS belum diisi, jalankan mode simulasi tampilan
+            if (!URL_GAS_WEBAPP) {
+                setTimeout(() => {
+                    const hasilSimulasi = `
+                        <div class="bg-white p-4 rounded border border-slate-200 space-y-3">
+                            <div class="bg-green-50 text-green-800 p-2.5 rounded text-xs border border-green-200">
+                                <strong>Simulasi Berhasil!</strong> Tampilan antarmuka web sudah siap. Pada langkah berikutnya, kita akan menyambungkan tombol ini ke Google Apps Script agar diisi oleh AI sungguhan.
+                            </div>
+                            <h4 class="font-bold text-base text-blue-800">Contoh Output ${infoTahap[tahapAktif].judul}</h4>
+                            <p><strong>Mata Pelajaran:</strong> ${payload.mapel || '-'} | <strong>Fase/Kelas:</strong> ${payload.fase} / ${payload.kelas || '-'}</p>
+                            <p><strong>Integrasi Deep Learning & KBC:</strong> ${payload.nilaiKBC}</p>
+                            <hr>
+                            <p class="text-slate-600 italic">Hasil tabel dan teks lengkap dari Gemini AI akan muncul di area ini dan siap diunduh ke Microsoft Word.</p>
+                        </div>
+                    `;
+                    memoriPerangkat[`tahap${tahapAktif}`] = hasilSimulasi;
+                    areaHasil.innerHTML = hasilSimulasi;
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles mr-2"></i> ${infoTahap[tahapAktif].tombol}`;
+                }, 1000);
+                return;
+            }
+
+            // Kode pengiriman ke Google Apps Script (Akan aktif setelah URL_GAS_WEBAPP diisi)
+            try {
+                const response = await fetch(URL_GAS_WEBAPP, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                memoriPerangkat[`tahap${tahapAktif}`] = data.hasilHtml;
+                areaHasil.innerHTML = data.hasilHtml;
+            } catch (error) {
+                areaHasil.innerHTML = `<div class="text-red-600 p-4">Terjadi kesalahan koneksi ke Google Apps Script: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles mr-2"></i> ${infoTahap[tahapAktif].tombol}`;
+            }
+        }
+
+        function salinHasil() {
+            const teks = document.getElementById('areaHasil').innerText;
+            navigator.clipboard.writeText(teks);
+            alert("Teks berhasil disalin ke clipboard!");
+        }
+
+        function exportWordSederhana() {
+            const konten = document.getElementById('areaHasil').innerHTML;
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Perangkat Ajar</title></head><body>";
+            const footer = "</body></html>";
+            const sourceHTML = header + konten + footer;
+            
+            const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            const fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = `Perangkat_Ajar_Tahap_${tahapAktif}.doc`;
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+        }
+    </script>
+</body>
+</html>
